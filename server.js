@@ -2,9 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8000;
-const db = require("./config/database");
 const Flight = require("./models/flight");
-const MO = require("method-override");
+const MethodOverride = require("method-override");
 const Destination = require("./models/destination");
 
 // View Engine Middleware Configure
@@ -18,7 +17,7 @@ app.set("views", "./views");
 // Custom Middleware
 app.use(express.urlencoded({ extended: false }));
 
-app.use(MO("_method"));
+app.use(MethodOverride("_method"));
 
 //accessing static files from public folder like css, imgs, fonts
 app.use(express.static("public"));
@@ -28,7 +27,7 @@ app.use(express.static("public"));
 app.get("/flights", async (req, res) => {
   try {
     const foundFlight = await Flight.find({});
-    res.render("Index", { flight: foundFlight });
+    res.status(200).render("flights/Index", { flight: foundFlight });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -58,7 +57,7 @@ app.put("/flights/:id", async (req, res) => {
       { new: true }
     );
     res.redirect(`flight/${req.params.id}`, {
-      flight: editFlight,
+      flight: updatetFlight,
     });
   } catch (err) {
     res.status(400).send(err);
@@ -71,7 +70,7 @@ app.get("/flights/:id", async (req, res) => {
     const newFlight = await Flight.findById(req.params.id).populate(
       "destinations"
     );
-    res.render("Show", { Flight: newFlight });
+    res.render("Show", { flight: newFlight });
   } catch (err) {
     res.status(400).send(err);
   }

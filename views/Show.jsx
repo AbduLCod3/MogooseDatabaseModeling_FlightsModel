@@ -3,9 +3,9 @@ const DefaultLayout = require("./layout/Default");
 
 class Show extends React.Component {
   render() {
-    const flight = this.props;
+    const flight = this.props.flight;
     return (
-      <DefaultLayout title="Show Page" link="/pokemons" text="Home">
+      <DefaultLayout title="Show Page" link="/flights" text="Home">
         <div>
           Airline: {flight.airline}
           Flight No: {flight.flightNo}
@@ -17,7 +17,6 @@ class Show extends React.Component {
           return (
             <div key={index}>
               {destination.airport}
-              {destination.arrival}
             </div>
           );
         })}

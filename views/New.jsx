@@ -5,17 +5,18 @@ class New extends React.Component {
   render() {
     return (
       <DefaultLayout title="Add Flight" link="/flights" text="Home">
+        <h1>Add A New Flight</h1>
         <form action="/flights" method="POST">
           <div className="form1">
             AIRLINE:
-            <select id="Airline" name="Airline">
+            <select id="Airline" name="airline">
               <option value="American">America</option>
               <option value="Southwest">Southwest</option>
               <option value="United">United</option>
             </select>
             <br />
-            Flight No: <input type="text" name="flightNo" /> <br />
-            Date: <input type="date" name="date" />
+            Flight No: <input type="number" name="flightNo" /> <br />
+            Date: <input type="date" name="departs" />
             <br />
             <label>Choose Airport</label>
             <select name="airport">
