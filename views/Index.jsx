@@ -9,7 +9,7 @@ class Index extends React.Component {
       <DefaultLayout
         title="Flights Page"
         link="/flights/new"
-        text="Create New Flight"
+        text="Add New Flight"
       >
         <ul>
           {flight.map((flights, i) => {
