@@ -21,19 +21,6 @@ class Show extends React.Component {
             </div>
           );
         })}
-        <form method="POST" action={`/destinations/${flight._id}`}>
-          <label>Choose Destination</label>
-          <select name="airport">
-            <option value="AUS">AUS</option>
-            <option value="DAL">DAL</option>
-            <option value="LAX">LAX</option>
-            <option value="SAN">SAN</option>
-            <option value="SEA">SEA</option>
-          </select>
-          <br />
-          Date: <input type="datetime-local" name="arrival" />
-          <input type="submit" value="submit" />
-        </form>
       </DefaultLayout>
     );
   }
