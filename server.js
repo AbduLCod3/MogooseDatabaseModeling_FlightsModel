@@ -3,42 +3,56 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8000;
 const Flight = require("./models/flight");
-const MethodOverride = require("method-override");
+const methodOverride = require("method-override");
 const Destination = require("./models/destination");
+const { connect, connection } = require("mongoose");
 
-// View Engine Middleware Configure
+// Database connect
+connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// MongoDB connection
+connection.once("open", () => {
+  console.log("connected to mongo");
+});
+
+// View Engine Config
 const reactViewsEngine = require("jsx-view-engine").createEngine();
 app.engine("jsx", reactViewsEngine);
-// This line tells the render method the default file extension to look for.
+
+// Set view engine
 app.set("view engine", "jsx");
-// This line sets the render method's default location to look for a jsx file to render. Without this line of code we would have to specific the views directory everytime we use the render method
 app.set("views", "./views");
 
-// Custom Middleware
+// Middleware setup
 app.use(express.urlencoded({ extended: false }));
-
-app.use(MethodOverride("_method"));
-
-//accessing static files from public folder like css, imgs, fonts
+app.use(methodOverride("_method"));
 app.use(express.static("public"));
 
-// I.N.D.U.C.E.S
-//index route//
+// Custom Middleware
+app.use((req, res, next) => {
+  console.log("Middleware running...");
+  next();
+});
+
+// Routes
 app.get("/flights", async (req, res) => {
   try {
     const foundFlight = await Flight.find({});
-    res.status(200).render("flights/Index", { flight: foundFlight });
+    res.status(200).render("index", { flight: foundFlight });
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
-//New route//
+// New route
 app.get("/flights/new", (req, res) => {
   res.render("New");
 });
 
-//Create(post)route: recv info from new route and create new flight and display on index route with other flights on a list//
+// Create route
 app.post("/flights", async (req, res) => {
   try {
     const newflight = await Flight.create(req.body);
@@ -48,7 +62,7 @@ app.post("/flights", async (req, res) => {
   }
 });
 
-//Update route
+// Update route
 app.put("/flights/:id", async (req, res) => {
   try {
     const updatetFlight = await Flight.findByIdAndUpdate(
@@ -64,7 +78,7 @@ app.put("/flights/:id", async (req, res) => {
   }
 });
 
-//Show route
+// Show route
 app.get("/flights/:id", async (req, res) => {
   try {
     const newFlight = await Flight.findById(req.params.id).populate(
@@ -76,24 +90,7 @@ app.get("/flights/:id", async (req, res) => {
   }
 });
 
-//induces destinations
-//Create
-app.post("/destinations/:id", async (req, res) => {
-  try {
-    const newDestination = await Destination.create(req.body);
-
-    const updatedFlight = await Flight.findByIdAndUpdate(
-      req.params.id,
-      { $addToSet: { destinations: newDestination._id } },
-      { new: true }
-    );
-    res.redirect(`/flights/${req.params.id}`);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-// Listen
+// Server listening
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });

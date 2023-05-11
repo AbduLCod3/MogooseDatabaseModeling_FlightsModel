@@ -19,7 +19,7 @@ class Index extends React.Component {
 
                 <div>{flights.flightNo}</div>
 
-                <div>{flights.departs}</div>
+                <div>{flights.departs.toString()}</div>
 
                 <div>{flights.airport}</div>
 
