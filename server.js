@@ -55,7 +55,7 @@ app.get("/flights/new", (req, res) => {
 // Create route
 app.post("/flights", async (req, res) => {
   try {
-    const newflight = await Flight.create(req.body);
+    const newFlight = await Flight.create(req.body);
     res.redirect("/flights");
   } catch (err) {
     res.status(400).send(err);
